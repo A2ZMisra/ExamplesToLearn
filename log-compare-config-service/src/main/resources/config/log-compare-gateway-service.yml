@@ -1,0 +1,27 @@
+server:
+  port: 8060
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8061/eureka/
+              
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: log-compare-api-service
+        uri: lb://log-compare-api-service
+        predicates:
+        - Path=/api/**
+        filters:
+        - RewritePath=/api/(?<path>.*), /$\{path} 
+      - id: log-compare-fetch-api-info-service
+        uri: lb://log-compare-fetch-api-info-service
+        predicates:
+        - Path=/apiinfo/**
+        filters:
+        - RewritePath=/apiinfo/(?<path>.*), /$\{path}
